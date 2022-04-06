@@ -38,6 +38,7 @@ def pred_error(predicted, target):
         summErr += abs(predicted[i]-target[i])/(predicted[i]+target[i])
     return error*summErr
 
+
 def score(error):
     return 1000*(1-error)
 
