@@ -36,8 +36,10 @@ def pred_error(predicted, target):
     summErr = 0
     for i in range(len(predicted)):
         summErr += abs(predicted[i]-target[i])/(predicted[i]+target[i])
-
     return error*summErr
+
+def score(error):
+    return 1000*(1-error)
 
 
 def bucketize_column(column, min, max, resolution):
