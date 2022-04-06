@@ -1,3 +1,5 @@
+import tensorflow as tf
+import numpy as np
 from matplotlib import pyplot as plt
 
 
@@ -27,11 +29,17 @@ def plot_features_vs_label(features, label):
         plt.ylim([label.min()*0.94, label.max()*1.05])
         plt.xlim([label.min()*0.94, label.max()*1.05])
         plt.show()
-        
+
+
 def pred_error(predicted, target):
     error = 1/len(predicted)
     summErr = 0
     for i in range(len(predicted)):
         summErr += abs(predicted[i]-target[i])/(predicted[i]+target[i])
-        
+
     return error*summErr
+
+
+def bucketize_column(column, min, max, resolution):
+    boundaries = list(np.arange(int(min), int(max), resolution))
+    return tf.feature_column.bucketized_column(column, boundaries)
