@@ -134,3 +134,11 @@ def train_model(model, features, label, my_epochs,
     rmse = hist["tf_error"]
 
     return epochs, rmse, history.history
+
+
+def replace_with_linear_interpolation(train, indices):
+    train['rownum'] = np.arange(train.shape[0])
+    invalid = train.drop(train.loc[indices].index)
+    f = interp1d(invalid['rownum'], invalid['total'], fill_value="extrapolate")
+    train['total'] = f(train['rownum'])
+    del train['rownum']
