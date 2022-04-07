@@ -73,6 +73,10 @@ def tf_error(y_true, y_pred):
     return tf.reduce_mean(tf.abs(y_pred-y_true)/(y_pred+y_true))
 
 
+def np_error(y_true, y_pred):
+    return np.mean(np.abs(y_pred-y_true)/(y_pred+y_true))
+
+
 class CustomAccuracy(tf.keras.losses.Loss):
     def call(self, y_true, y_pred):
         return tf_error(y_true, y_pred)
@@ -141,6 +145,10 @@ def evaluate_model(model, features, label, my_batch_size=None):
         x={name: np.array(value) for name, value in features.items()},
         y=np.array(label),
         batch_size=my_batch_size)
+
+
+def predict_model(model, features, my_batch_size=None):
+    return model.predict({name: np.array(value) for name, value in features.items()}, batch_size=my_batch_size)
 
 
 def replace_with_linear_interpolation(train, indices):
