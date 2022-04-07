@@ -88,5 +88,49 @@ def score(error):
 
 
 def bucketize_column(column, min, max, resolution):
-    boundaries = list(np.arange(int(min), int(max), resolution))
+    # boundaries = list(np.arange(int(min), int(max), resolution))
+    boundaries = list(np.linspace((min), (max), resolution))
     return tf.feature_column.bucketized_column(column, boundaries)
+
+
+def create_model(my_learning_rate, feature_layer):
+    # Most simple tf.keras models are sequential.
+    model = tf.keras.models.Sequential()
+
+    # Add the layer containing the feature columns to the model.
+    model.add(feature_layer)
+
+    # Add one linear layer to the model to yield a simple linear regressor.
+    model.add(tf.keras.layers.Dense(units=1, input_shape=(1,)))
+
+    # Construct the layers into a model that TensorFlow can execute.
+    model.compile(optimizer=tf.keras.optimizers.RMSprop(lr=my_learning_rate),
+                  loss=CustomAccuracy(),
+                  metrics=[tf_error])
+
+    return model
+
+
+def train_model(model, features, label, my_epochs,
+                my_batch_size=None, my_validation_split=0.1):
+    history = model.fit(
+        x={name: np.array(value) for name, value in features.items()},
+        y=np.array(label),
+        batch_size=my_batch_size,
+        epochs=my_epochs,
+        validation_split=my_validation_split,
+        shuffle=True)
+
+    # Gather the model's trained weight and bias.
+    trained_weight = model.get_weights()[0]
+    trained_bias = model.get_weights()[1]
+
+    # The list of epochs is stored separately from the rest of history.
+    epochs = history.epoch
+
+    # Isolate the mean absolute error for each epoch.
+    hist = pd.DataFrame(history.history)
+    print(dir(hist), hist.columns)
+    rmse = hist["tf_error"]
+
+    return epochs, rmse, history.history
