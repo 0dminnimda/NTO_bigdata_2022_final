@@ -137,7 +137,10 @@ def train_model(model, features, label, my_epochs,
 
 
 def evaluate_model(model, features, label, my_batch_size=None):
-    return model.evaluate(x={name: np.array(value) for name, value in features.items()}, y=label, batch_size=my_batch_size)
+    return model.evaluate(
+        x={name: np.array(value) for name, value in features.items()},
+        y=np.array(label),
+        batch_size=my_batch_size)
 
 
 def replace_with_linear_interpolation(train, indices):
