@@ -123,7 +123,8 @@ def train_model(model, features, label, my_epochs,
         batch_size=my_batch_size,
         epochs=my_epochs,
         validation_split=my_validation_split,
-        shuffle=True)
+        # shuffle=True
+    )
 
     # Gather the model's trained weight and bias.
     trained_weight = model.get_weights()[0]
