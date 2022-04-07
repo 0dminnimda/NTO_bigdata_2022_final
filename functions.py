@@ -130,10 +130,14 @@ def train_model(model, features, label, my_epochs,
 
     # Isolate the mean absolute error for each epoch.
     hist = pd.DataFrame(history.history)
-    print(dir(hist), hist.columns)
+    # print(dir(hist), hist.columns)
     rmse = hist["tf_error"]
 
     return epochs, rmse, history.history
+
+
+def evaluate_model(model, features, label, my_batch_size=None):
+    return model.evaluate(x={name: np.array(value) for name, value in features.items()}, y=label, batch_size=my_batch_size)
 
 
 def replace_with_linear_interpolation(train, indices):
